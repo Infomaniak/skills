@@ -408,7 +408,7 @@ Provide a `#Preview` that injects shared state via `PreviewHelper`:
 
 This skill lives in `skill_infomaniak/`. To make it discoverable by opencode, place it
 (or symlink it) under a skills directory:
-- personal: `~/.config/opencode/skills/infomaniak-swiftui-tuist/SKILL.md`
-- project: `<repo>/.opencode/skills/infomaniak-swiftui-tuist/SKILL.md`
+- personal: `~/.config/opencode/skills/infomaniak-swiftui/SKILL.md`
+- project: `<repo>/.opencode/skills/infomaniak-swiftui/SKILL.md`
 
 The folder name must match the `name` field in the frontmatter.
