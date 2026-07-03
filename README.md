@@ -1,10 +1,10 @@
 # Infomaniak Agent Skills
 
-**iOS development skills for AI coding agents at Infomaniak.**
+**Development skills for AI coding agents at Infomaniak.**
 
-Skills encode the architecture conventions, quality gates, and best practices that Infomaniak iOS engineers follow when building software. These are packaged so AI agents follow them consistently across every Infomaniak project.
+Skills encode the architecture conventions, quality gates, and best practices that Infomaniak engineers follow when building software. These are packaged so AI agents follow them consistently across every Infomaniak project.
 
-> **Prefix convention:** All skills are prefixed with `infomaniak-` so they remain clearly identifiable when used alongside other skill providers.
+> **Prefix convention:** Skills are prefixed with `infomaniak-` when the name would otherwise be too generic, so they remain clearly identifiable when used alongside other skill providers. This prefix is not required for skills with a sufficiently specific name.
 
 ---
 
@@ -13,9 +13,7 @@ Skills encode the architecture conventions, quality gates, and best practices th
 | Skill | Platform | Status | Description |
 |-------|----------|--------|-------------|
 | [infomaniak-swiftui](infomaniak-swiftui/SKILL.md) | iOS (SwiftUI) | Available | House conventions for modular SwiftUI apps built with Tuist: multi-module architecture (App/Core/CoreUI/Features/Resources), DI via InfomaniakDI, Realm/KMP patterns, InfomaniakCoreUI paddings, view naming conventions, sheet/modal presentation, Swift 6 concurrency. |
-| [infomaniak-uikit](infomaniak-uikit/SKILL.md) | iOS (UIKit) | Coming soon | House conventions for UIKit iOS apps built with Tuist: flat App/Core/Resources target layout, UI organized by domain under UI/Controller & UI/View, MVVM with Combine, AppRouter coordinator, DI via InfomaniakDI/CoreTargetAssembly, Realm via Transactionable + schema migrations, UIConstants paddings. |
-
-> **Note:** `infomaniak-uikit` is currently on the `feat/uikit-skill-init` branch and will be merged into `main` shortly.
+| [infomaniak-uikit](infomaniak-uikit/SKILL.md) | iOS (UIKit) | Available | House conventions for UIKit iOS apps built with Tuist: flat App/Core/Resources target layout, UI organized by domain under UI/Controller & UI/View, MVVM with Combine, AppRouter coordinator, DI via InfomaniakDI/CoreTargetAssembly, Realm via Transactionable + schema migrations, UIConstants paddings. |
 
 ---
 
@@ -59,7 +57,7 @@ For GitHub Copilot, copy the relevant sections from a `SKILL.md` into your repos
 Every skill in this repository follows the same structure:
 
 ```
-infomaniak-<name>/
+<name>/
 └── SKILL.md          # The complete skill definition
 ```
 
@@ -70,22 +68,22 @@ The `SKILL.md` must include:
 1. **Frontmatter block** at the very top:
    ```yaml
    ---
-   name: infomaniak-<name>
+   name: <name>
    description: Concise description of what this skill covers and when to use it.
    ---
    ```
-2. **The `name` field must identically match the directory name** (`infomaniak-<name>`).
+2. **The `name` field must identically match the directory name.**
 3. **Markdown body** with workflows, conventions, checklists, and installation instructions.
 
 ---
 
 ## Contributing
 
-To add a new Infomaniak skill:
+To add a new skill:
 
-1. Create a directory `infomaniak-<name>/` at the repository root.
+1. Create a directory `<name>/` at the repository root.
 2. Add a `SKILL.md` file inside with:
-   - Frontmatter containing `name: infomaniak-<name>` and `description`.
+   - Frontmatter containing `name: <name>` and `description`.
    - Architecture conventions, code patterns, and verification checklists specific to the skill's domain.
 3. Ensure the `name` in the frontmatter **exactly matches** the directory name.
 4. Open a pull request for review.
