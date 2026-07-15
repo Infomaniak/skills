@@ -1,6 +1,6 @@
 ---
 name: swift-core-dev
-description: Use when writing, editing, or reviewing Swift code in any Swift project: apps, frameworks, packages, extensions, or CLIs. Enforces pragmatic modern Swift conventions: structured concurrency, InfomaniakConcurrency, InfomaniakDI, actors, Sendable, typed errors, Swift Testing, clear boundaries, and testable design. Trigger keywords: Swift, async/await, actor, Sendable, InfomaniakConcurrency, InfomaniakDI, Swift Testing, XCTest, Package.swift, xcodebuild.
+description: Use when writing, editing, or reviewing Swift code in any Swift project: apps, frameworks, packages, extensions, or CLIs. Enforces pragmatic modern Swift conventions: structured concurrency, InfomaniakConcurrency, InfomaniakDI, actors, Sendable, typed errors, Swift Testing, clear boundaries, and testable design. Trigger keywords: Swift, core, async/await, actor, Sendable, InfomaniakConcurrency, InfomaniakDI, Swift Testing, XCTest, Package.swift, xcodebuild.
 ---
 
 # Swift Core Dev
