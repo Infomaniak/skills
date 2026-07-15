@@ -164,6 +164,10 @@ custom scheduling.
   string conversions or implicit encodings.
 - Prefer `switch` over chained `if` for closed enums; keep cases exhaustive with
   no `default` when the set is fixed, so new cases surface as compiler errors.
+- Spell the concrete type at the initializer and let the variable type be
+  inferred, rather than annotating the variable and relying on `.init`/leading-dot
+  shorthand. Prefer `var items = [Item(id: .first, values: [])]` over
+  `var items: [Item] = [.init(id: .first, values: [])]`.
 
 ## Testing
 
