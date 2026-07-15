@@ -24,14 +24,36 @@ invalidates documented behavior, update the matching doc in the same change.
    `actor`, isolated state, and `InfomaniakConcurrency` when available or
    appropriate to add. Avoid locks, semaphores, and `@unchecked Sendable`.
 4. Errors are typed enums, mapped deliberately at system boundaries.
-5. Keep files small and split along feature / domain / service / platform /
-   persistence boundaries before they get hard to review. Keep files under 1,000
-   lines; split earlier when a type has multiple responsibilities. Put
-   extensions in `Type+Feature.swift`.
+5. Keep files small and single-purpose; split before they get hard to review.
+   See _Architecture & code organization_ for how.
 6. Document reasons, not syntax. Add comments only when code is doing something
    non-obvious that cannot be guessed by reading the implementation.
 7. Never log, commit, or store bearer/refresh/ID tokens, account identifiers,
    private URLs, or user data. Tests use redacted strings and mocked sessions.
+
+## Architecture & code organization
+
+Match the project's existing structure first. These are defaults for when it is
+silent or inconsistent, or a compass when it is actively breaking down.
+
+- Follow the existing folder/module layout and naming. Introduce a new
+  organizing scheme only when the current one is absent or failing, and then stay
+  consistent with it.
+- One primary type per file, named after the type. Keep files under 1,000 lines;
+  split earlier when a type gains a second responsibility. Put focused extensions
+  in `Type+Feature.swift`.
+- Prefer grouping by feature/domain over layer-wide buckets. A feature owns its
+  models, services, and views together so it can move or be extracted as a unit.
+- Depend on abstractions across feature boundaries, not on other features'
+  concrete types. Keep the dependency graph acyclic so a folder can become a
+  package later without untangling cycles.
+- Separate interface from implementation at real seams (networking, persistence,
+  platform services). The protocol, the production implementation, and the test
+  double are distinct types.
+- Keep the public surface minimal and intentional
+  `public` only for a deliberate API. That surface is the future library boundary.
+- Refactor toward these splits opportunistically and in small steps. Do not
+  reorganize an entire module as a side effect of an unrelated change.
 
 ## Types and modeling
 
