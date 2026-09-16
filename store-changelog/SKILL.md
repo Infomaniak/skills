@@ -68,8 +68,8 @@ git rev-parse --verify "<tag>^{commit}"
 Determine their relationship:
 
 ```bash
-git merge-base --is-ancestor "<older-tag>" "<newer-tag>"
-```
+git merge-base --is-ancestor "<older-tag>" "<newer-tag>"  # older -> newer
+git merge-base --is-ancestor "<newer-tag>" "<older-tag>"  # newer -> older
 
 Use the range:
 
