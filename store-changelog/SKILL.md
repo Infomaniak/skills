@@ -55,7 +55,7 @@ Use repository structure, build manifests, target configuration, changed files, 
 
 If only Apple indicators are present, produce App Store notes. If only Android indicators are present, produce Google Play notes. If both are present, determine which platforms the compared changes affect.
 
-Ask the user which store to target only when the repository and requested range do not establish it.
+If the user explicitly names a store, use it when supported; if it conflicts with repository evidence, explain the mismatch and ask before switching stores. Infer the target store only when the user did not specify one.
 
 ### 2. Validate the range
 
