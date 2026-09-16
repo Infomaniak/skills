@@ -158,7 +158,7 @@ Write English first:
 
 Translate the final English meaning naturally, not word-for-word.
 
-Use these headings:
+When no languages were requested, use these headings; otherwise include only the explicitly requested languages with their native headings:
 
 ```markdown
 ### English
