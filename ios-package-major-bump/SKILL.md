@@ -1,11 +1,11 @@
 ---
-name: ios-core-major-bump
-description: Propagate a breaking (major) release of an Infomaniak iOS Swift package, usually ios-core, through every dependent Infomaniak package (ios-core-ui, ios-core-uikit, ios-notifications, ios-version-checker, ios-create-account, ios-bug-tracker, ios-features…) in dependency order, tag the new majors, then update the app (Calendar, Mail, kDrive, SwissTransfer, Euria, Authenticator). Use when the user released a new major of ios-core (or another shared package) and wants an app to target it.
+name: ios-package-major-bump
+description: Propagate a breaking (major) release of any shared Infomaniak iOS Swift package (ios-core, ios-core-ui, ios-login…) through every dependent Infomaniak package (ios-core-ui, ios-core-uikit, ios-notifications, ios-version-checker, ios-create-account, ios-bug-tracker, ios-features…) in dependency order, tag the new majors, then update the app (Calendar, Mail, kDrive, SwissTransfer, Euria, Authenticator). Use when the user released a new major of a shared package and wants an app to target it.
 ---
 
-# ios-core major bump cascade
+# iOS package major bump cascade
 
-When a shared package such as `ios-core` gets a new major, SwiftPM cannot resolve an app until **every** Infomaniak package depending on it, directly or transitively, has a new major that requires it. This skill releases those packages layer by layer, then updates the app.
+When a shared package (the **root**, e.g. `ios-core`) gets a new major, SwiftPM cannot resolve an app until **every** Infomaniak package depending on it, directly or transitively, has a new major that requires it. This skill releases those packages layer by layer, then updates the app.
 
 ## Inputs
 
@@ -66,7 +66,7 @@ for n in sorted(pk, key=lambda n: (depth(n), n)):
 print("Apps (Tuist/Package.swift):")
 for n in apps: print(f"  {n:24} uses: {', '.join(sorted(d for d in deps[n] if d in aff | {ROOT}))}")
 EOF
-python3 /tmp/ik-graph.py ios-core
+python3 /tmp/ik-graph.py <root>   # e.g. ios-core
 ```
 
 Check the output against these rules before continuing:
@@ -79,15 +79,15 @@ Track every repo in the session SQL `todos` table, with `todo_deps` mirroring th
 
 ## 2. Identify the source migrations
 
-Diff the root package between its previous tag and the new one, to find changes that require code edits in dependents:
+Diff the root package between its previous major tag and the new one, to find changes that require code edits in dependents:
 
 ```bash
-gh repo clone Infomaniak/ios-core /tmp/ik-bump/ios-core -- -q
-git -C /tmp/ik-bump/ios-core --no-pager log --oneline <previous>..<new>
-git -C /tmp/ik-bump/ios-core --no-pager diff <previous>..<new> -- Package.swift Sources
+gh repo clone Infomaniak/<root> /tmp/ik-bump/<root> -- -q
+git -C /tmp/ik-bump/<root> --no-pager log --oneline <previous>..<new>
+git -C /tmp/ik-bump/<root> --no-pager diff <previous>..<new> -- Package.swift Sources
 ```
 
-Look for renamed or removed public API, and for changes to products or transitive modules. For example, in ios-core 20.0.0, `Sentry-Dynamic` was replaced by `SentrySPM`, so every consumer has to change `import Sentry` to `import SentrySwift`. Grep each affected repo and the app for the affected symbols or imports, then fix them in the same PR as the version bump.
+Look for renamed or removed public API, and for changes to products or transitive modules. For example, ios-core 20.0.0 replaced `Sentry-Dynamic` with `SentrySPM`, so every consumer has to change `import Sentry` to `import SentrySwift`. Grep each affected repo and the app for the affected symbols or imports, then fix them in the same PR as the version bump.
 
 ## 3. Release each layer
 
@@ -97,7 +97,7 @@ For each repo in the current layer:
 
 ```bash
 cd /tmp/ik-bump && gh repo clone Infomaniak/<repo> -- -q && cd <repo>
-git checkout -q -b chore/bump-ios-core-<major>
+git checkout -q -b chore/bump-<root>-<major>
 # Bump the root and every package released in earlier layers (repeat -e for each one)
 sed -i '' \
   -e 's#\(Infomaniak/ios-core", .upToNextMajor(from: "\)[0-9.]*"#\120.0.0"#' \
@@ -123,10 +123,10 @@ Commit `Package.swift`, `Package.resolved` and any source migrations. Use a sign
 
 ```bash
 git add Package.swift Package.resolved <migrated files>
-git commit -S -m "chore: Update ios-core to 20.0.0"
+git commit -S -m "chore: Update <root> to <version>"
 git push -q -u origin HEAD
-gh pr create -B <default-branch> -t "chore: Update ios-core to 20.0.0" \
-  -b "Bump InfomaniakCore to 20.0.0 (<one-line summary of the breaking change>). Requires a new major release."
+gh pr create -B <default-branch> -t "chore: Update <root> to <version>" \
+  -b "Bump <root> to <version> (<one-line summary of the breaking change>). Requires a new major release."
 ```
 
 For a repo that only bumps another package (such as `ios-core-uikit` → `ios-core-ui`), use a title that names that package, for example `chore: Update ios-core-ui to 28.0.0`.
@@ -135,7 +135,7 @@ Give the user every PR link of the layer and **stop until they confirm the merge
 
 ```bash
 git checkout -q <default-branch> && git pull -q
-grep -q '"20.0.0"' Package.swift            # make sure the merge contains the bump
+grep -q '"<version>"' Package.swift          # make sure the merge contains the bump
 git cat-file -t <previous-tag>              # existing tags are annotated ("tag"); match that style
 git tag -s <next-major> -m "<next-major>"   # plain semver, no "v" prefix
 git push -q origin <next-major>
@@ -151,7 +151,7 @@ Bump each affected package in `Tuist/Package.swift` to its new major. Leave pack
 
 ```bash
 cd /tmp/ik-bump && gh repo clone Infomaniak/<app> -- -q && cd <app>
-git checkout -q -b chore/bump-ios-core-<major>
+git checkout -q -b chore/bump-<root>-<major>
 # sed bumps on Tuist/Package.swift, plus the source migrations
 mise trust -q . && mise install
 mise exec -- tuist install && mise exec -- tuist generate --no-open
@@ -171,16 +171,3 @@ Commit with the same message style, open the PR, and send its link to the review
 - Every affected package has a merged PR and a signed tag at its next major. Verify the tags by running the graph script again: each `latest` shows the new major.
 - The app PR is open, `Package.resolved` contains the new root version, and the build either passes or fails only on errors that also occur on `main`.
 - Final report: one line per repo with its PR and tag, the app PR link, pre-existing build issues, and confirmation that the user's local checkout was not touched.
-
-## Worked example: ios-core 20.0.0 (November 2026)
-
-| Layer | Repo | Tag | Notes |
-|-------|------|-----|-------|
-| 1 | ios-core-ui | 28.0.0 | |
-| 1 | ios-notifications | 17.0.0 | |
-| 2 | ios-version-checker | 20.0.0 | |
-| 2 | ios-create-account | 27.0.0 | |
-| 2 | ios-core-uikit | 4.0.0 | Transitive only, through ios-core-ui. It was missing from the user's list. |
-| 3 | ios-bug-tracker | 21.0.0 | Default branch `master` |
-| 3 | ios-features | 12.0.0 | |
-| app | ios-calendar | — | `import Sentry` → `import SentrySwift` in 3 files |

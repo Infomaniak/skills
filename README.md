@@ -14,7 +14,7 @@ Skills encode the architecture conventions, quality gates, and best practices th
 |-------|----------|--------|-------------|
 | [infomaniak-swiftui](infomaniak-swiftui/SKILL.md) | iOS (SwiftUI) | Available | House conventions for modular SwiftUI apps built with Tuist: multi-module architecture (App/Core/CoreUI/Features/Resources), DI via InfomaniakDI, Realm/KMP patterns, InfomaniakCoreUI paddings, view naming conventions, sheet/modal presentation, Swift 6 concurrency. |
 | [infomaniak-uikit](infomaniak-uikit/SKILL.md) | iOS (UIKit) | Available | House conventions for UIKit iOS apps built with Tuist: flat App/Core/Resources target layout, UI organized by domain under UI/Controller & UI/View, MVVM with Combine, AppRouter coordinator, DI via InfomaniakDI/CoreTargetAssembly, Realm via Transactionable + schema migrations, UIConstants paddings. |
-| [ios-core-major-bump](ios-core-major-bump/SKILL.md) | iOS (SwiftPM) | Available | Propagate a breaking ios-core (or other shared package) release through every dependent Infomaniak package in dependency order, tag the new majors, then update the app (Calendar, Mail, kDrive…). |
+| [ios-package-major-bump](ios-package-major-bump/SKILL.md) | iOS (SwiftPM) | Available | Propagate a breaking release of any shared iOS package (ios-core, ios-core-ui…) through every dependent Infomaniak package in dependency order, tag the new majors, then update the app (Calendar, Mail, kDrive…). |
 
 ---
 
